@@ -1,0 +1,13 @@
+LOAD DATABASE
+     FROM sqlite:////Users/stefanradev/Documents/Strapi/my-directory/.tmp/data.db
+     INTO postgresql://postgres:HtEsbCFfMukIGlPxCBEOggvSiWWxbswh@interchange.proxy.rlwy.net:50468/railway
+
+ WITH include no drop,
+      create tables,
+      create indexes,
+      reset sequences,
+      batch rows = 500,
+      prefetch rows = 1000
+
+ SET work_mem to '16MB',
+     maintenance_work_mem to '512 MB';
