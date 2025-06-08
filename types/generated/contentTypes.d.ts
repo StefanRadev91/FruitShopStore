@@ -476,6 +476,41 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     weight: Schema.Attribute.Enumeration<['kg_0.250', 'kg_0.500', 'kg_1.000']>;
+    weight_variants: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::weight-variant.weight-variant'
+    >;
+  };
+}
+
+export interface ApiWeightVariantWeightVariant
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'weight_variants';
+  info: {
+    displayName: 'Weight Variant';
+    pluralName: 'weight-variants';
+    singularName: 'weight-variant';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    label: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::weight-variant.weight-variant'
+    > &
+      Schema.Attribute.Private;
+    price: Schema.Attribute.Decimal;
+    product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -991,6 +1026,7 @@ declare module '@strapi/strapi' {
       'api::category.category': ApiCategoryCategory;
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
+      'api::weight-variant.weight-variant': ApiWeightVariantWeightVariant;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

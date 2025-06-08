@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "weight_variants",
+  "info": {
+    "singularName": "weight-variant",
+    "pluralName": "weight-variants",
+    "displayName": "Weight Variant"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "weight_variants"
+    }
+  }
+}

@@ -50,6 +50,12 @@
         "kg_0.500",
         "kg_1.000"
       ]
+    },
+    "weight_variants": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::weight-variant.weight-variant",
+      "mappedBy": "product"
     }
   }
 }
