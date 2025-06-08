@@ -42,6 +42,14 @@
     },
     "new_product": {
       "type": "boolean"
+    },
+    "weight": {
+      "type": "enumeration",
+      "enum": [
+        "kg_0.250",
+        "kg_0.500",
+        "kg_1.000"
+      ]
     }
   }
 }
