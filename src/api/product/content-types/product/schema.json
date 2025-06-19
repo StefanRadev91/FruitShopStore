@@ -56,6 +56,10 @@
       "relation": "oneToMany",
       "target": "api::weight-variant.weight-variant",
       "mappedBy": "product"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
     }
   }
 }
