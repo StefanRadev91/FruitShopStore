@@ -60,6 +60,12 @@
     "slug": {
       "type": "uid",
       "targetField": "name"
+    },
+    "promo": {
+      "type": "boolean"
+    },
+    "promo_price": {
+      "type": "string"
     }
   }
 }

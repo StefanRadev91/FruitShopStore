@@ -471,6 +471,8 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     new_product: Schema.Attribute.Boolean;
     price: Schema.Attribute.String;
     product_description: Schema.Attribute.Blocks;
+    promo: Schema.Attribute.Boolean;
+    promo_price: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'>;
     updatedAt: Schema.Attribute.DateTime;
