@@ -18,14 +18,26 @@ export default {
       let productsHtml = '<p><strong>Продукти:</strong> Няма</p>';
       
       if (result.products && Array.isArray(result.products)) {
-        const productsRows = result.products.map(product => 
-          `<tr>
-            <td style="padding: 8px; border: 1px solid #ddd;">${product.name}</td>
-            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${product.qty}</td>
-            <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">${product.price}</td>
-            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${product.weight}</td>
-          </tr>`
-        ).join('');
+        const productsRows = result.products.map(product => {
+          // Почистваме цената от текст и валута
+          const cleanPriceStr = product.price 
+            ? String(product.price).replace(/[^\d.,]/g, '').replace(',', '.')
+            : 'N/A';
+          
+          let priceDisplay = cleanPriceStr;
+          if (cleanPriceStr !== 'N/A' && !isNaN(parseFloat(cleanPriceStr))) {
+            const priceBGN = parseFloat(cleanPriceStr);
+            const priceEUR = (priceBGN * 0.5113).toFixed(2);
+            priceDisplay = `${cleanPriceStr} лв. (${priceEUR} €)`;
+          }
+          
+          return `<tr>
+            <td style="padding: 8px; border: 1px solid #ddd;">${product.name || 'N/A'}</td>
+            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${product.qty || 0}</td>
+            <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">${priceDisplay}</td>
+            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${product.weight || 'N/A'}</td>
+          </tr>`;
+        }).join('');
         
         productsHtml = `
           <p><strong>Продукти:</strong></p>
