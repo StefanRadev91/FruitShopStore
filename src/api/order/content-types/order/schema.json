@@ -32,6 +32,16 @@
     },
     "notes": {
       "type": "string"
+    },
+    "OrderStatus": {
+      "type": "enumeration",
+      "enum": [
+        "processing   ",
+        "ready       ",
+        "delivered   ",
+        "cancelled "
+      ],
+      "default": "processing   "
     }
   }
 }
