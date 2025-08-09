@@ -37,7 +37,6 @@ $RECYCLE.BIN/
 ############################
 
 *.7z
-*.csv
 *.dat
 *.dmg
 *.gz
@@ -129,3 +128,10 @@ dist
 build
 .strapi-updater.json
 .strapi-cloud.json
+
+############################
+# Sensitive Data
+############################
+
+*.csv
+.tmp/
