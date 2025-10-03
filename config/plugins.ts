@@ -16,16 +16,23 @@ export default ({ env }) => ({
       provider: 'nodemailer',
       providerOptions: {
         host: env('SMTP_HOST', 'smtp.gmail.com'),
-        port: Number(env('SMTP_PORT', 587)),
-        secure: false, // ако ползваш порт 465 → смени на true
+        port: Number(env('SMTP_PORT') || 587),
+        secure: false,          // 587 => STARTTLS
+        requireTLS: true,       // изрично STARTTLS
+        family: 4,              // форсира IPv4
         auth: {
           user: env('SMTP_USER'),
-          pass: env('SMTP_PASS'),
+          pass: env('SMTP_PASS'), // 16-символен App Password
         },
-        // ↓ По-кратки таймаути, за да не чака дълго при проблем
-        connectionTimeout: 5000,  // 5s до установяване на TCP
-        greetingTimeout: 5000,    // 5s до SMTP greeting
-        socketTimeout: 8000,      // 8s общ socket idle
+        connectionTimeout: 5000,
+        greetingTimeout: 5000,
+        socketTimeout: 8000,
+        logger: true,
+        debug: true,
+        tls: {
+          servername: 'smtp.gmail.com',
+          rejectUnauthorized: true,
+        },
       },
       settings: {
         defaultFrom: env('SMTP_USER'),
