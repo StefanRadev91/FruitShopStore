@@ -1,32 +1,36 @@
-console.log('>>> SMTP_USER', process.env.SMTP_USER);
-console.log('>>> SMTP_PASS length', process.env.SMTP_PASS?.length);
-export default {
+// ./config/plugins.js
+export default ({ env }) => ({
   upload: {
     config: {
       provider: 'cloudinary',
       providerOptions: {
-        cloud_name: process.env.CLOUDINARY_NAME,
-        api_key: process.env.CLOUDINARY_KEY,
-        api_secret: process.env.CLOUDINARY_SECRET,
+        cloud_name: env('CLOUDINARY_NAME'),
+        api_key: env('CLOUDINARY_KEY'),
+        api_secret: env('CLOUDINARY_SECRET'),
       },
     },
   },
-  // Добави тази секция за email:
+
   email: {
     config: {
       provider: 'nodemailer',
       providerOptions: {
-        host:   process.env.SMTP_HOST,
-        port:   Number(process.env.SMTP_PORT) || 587,
-        secure: false,
+        host: env('SMTP_HOST', 'smtp.gmail.com'),
+        port: Number(env('SMTP_PORT', 587)),
+        secure: false, // ако ползваш порт 465 → смени на true
         auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
+          user: env('SMTP_USER'),
+          pass: env('SMTP_PASS'),
         },
+        // ↓ По-кратки таймаути, за да не чака дълго при проблем
+        connectionTimeout: 5000,  // 5s до установяване на TCP
+        greetingTimeout: 5000,    // 5s до SMTP greeting
+        socketTimeout: 8000,      // 8s общ socket idle
       },
       settings: {
-        defaultFrom: process.env.SMTP_USER,
+        defaultFrom: env('SMTP_USER'),
+        defaultReplyTo: env('SMTP_USER'),
       },
     },
   },
-};
+});

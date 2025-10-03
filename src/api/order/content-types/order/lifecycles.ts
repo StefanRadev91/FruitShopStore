@@ -1,5 +1,4 @@
-// src/api/orders/content-types/order/lifecycles.ts
-
+// без промяна на логика (оставяме await така, както е при теб)
 export default {
   async afterCreate(event: any) {
     const { result } = event;
@@ -14,7 +13,7 @@ export default {
     let productsHtml = '<p><strong>Продукти:</strong> Няма</p>';
     
     if (result.products && Array.isArray(result.products) && result.products.length > 0) {
-      const productsRows = result.products.map(product => {
+      const productsRows = result.products.map((product: any) => {
         // Почистваме цената от текст и валута
         const cleanPriceStr = product.price 
           ? String(product.price).replace(/[^\d.,]/g, '').replace(',', '.')
