@@ -1,4 +1,74 @@
 export default {
+  /**
+   * beforeCreate hook - Автоматично коригира цените преди записване
+   * Ако продуктът има активна промоция (promo === true и promo_price),
+   * използва promo_price вместо оригиналната price
+   */
+  async beforeCreate(event: any) {
+    const { data } = event.params;
+
+    // Проверяваме дали има продукти в поръчката
+    if (!data.products || !Array.isArray(data.products) || data.products.length === 0) {
+      strapi.log.info('⏭️ No products in order, skipping price validation');
+      return;
+    }
+
+    strapi.log.info(`🔍 Checking prices for ${data.products.length} products...`);
+
+    // За всеки продукт в поръчката
+    for (let i = 0; i < data.products.length; i++) {
+      const orderProduct = data.products[i];
+
+      // Ако продуктът няма ID, не можем да го проверим
+      if (!orderProduct.id) {
+        strapi.log.warn(`⚠️ Product at index ${i} has no ID, skipping price check`);
+        continue;
+      }
+
+      try {
+        // Зареждаме продукта от базата данни (Railway)
+        const product = await strapi.entityService.findOne(
+          'api::product.product',
+          orderProduct.id,
+          {
+            fields: ['id', 'name', 'price', 'promo_price', 'promo'],
+          }
+        );
+
+        if (!product) {
+          strapi.log.warn(`⚠️ Product #${orderProduct.id} not found in database`);
+          continue;
+        }
+
+        // Проверяваме дали има активна промоция с попълнена промо цена
+        if (product.promo && product.promo_price && product.promo_price.trim() !== '') {
+          const oldPrice = orderProduct.price;
+          const newPrice = product.promo_price;
+
+          // Заменяме цената с промо цената
+          data.products[i].price = newPrice;
+
+          strapi.log.info(
+            `✅ Product "${product.name}" (ID: ${orderProduct.id}): ` +
+            `Changed price from "${oldPrice}" to "${newPrice}" (promo)`
+          );
+        } else {
+          strapi.log.info(
+            `ℹ️ Product "${product.name}" (ID: ${orderProduct.id}): ` +
+            `No active promo, keeping original price "${orderProduct.price}"`
+          );
+        }
+      } catch (error: any) {
+        strapi.log.error(
+          `❌ Error loading product #${orderProduct.id} for price validation: ${error?.message}`
+        );
+        // Продължаваме с оригиналната цена при грешка
+      }
+    }
+
+    strapi.log.info('✅ Price validation completed');
+  },
+
   async afterCreate(event: any) {
     const { result } = event;
 
